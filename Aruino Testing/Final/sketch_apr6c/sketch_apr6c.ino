@@ -11,7 +11,7 @@ volatile int pulseCount;  // Use volatile for variables accessed within an inter
 unsigned long flowRate;
 
 void setup() {
-  Serial.begin(9600);
+  Serial1.begin(9600);
   SPI.begin();
 
   pinMode(chipSelectPin, OUTPUT);
@@ -33,23 +33,23 @@ void loop() {
   
   // Calculate the flow rate in liters per minute (L/min)
   flowRate = (pulseCount * 1000) / 2.25 / 60;
-  Serial.print("Flow Rate: ");
-  Serial.print(flowRate);
-  Serial.println(" L/min");
+  Serial1.print("Flow Rate: ");
+  Serial1.print(flowRate);
+  Serial1.println(" L/min");
 
   int turbidityValue = analogRead(turbiditySensorPin);
-  Serial.print("Turbidity: ");
-  Serial.println(turbidityValue);
+  Serial1.print("Turbidity: ");
+  Serial1.println(turbidityValue);
 
   bool waterLevelIsLow = digitalRead(floatSwitchPin) == LOW;
   bool waterTooDirty = turbidityValue < 300;
 
   if (waterLevelIsLow && !waterTooDirty) {
     digitalWrite(relayPin, LOW);  // Turn pump ON
-    Serial.println("Pump ON");
+    Serial1.println("Pump ON");
   } else {
     digitalWrite(relayPin, HIGH); // Turn pump OFF
-    Serial.println("Pump OFF");
+    Serial1.println("Pump OFF");
   }
 
   // SPI Communication for Air Pressure Sensor
@@ -66,8 +66,11 @@ void loop() {
   float conversionFactor = 40.0 / 4095; // Example conversion factor
   float pressure = pressureRaw * conversionFactor; // Calculate the pressure
 
-  Serial.print("Pressure: ");
-  Serial.println(pressure);
+  Serial1.print("Pressure: ");
+  Serial1.println(pressure);
+
+  Serial1.println("---------------------------------");
+  Serial1.println(" ");
 
   delay(3000);  // Delay for readability
 }
